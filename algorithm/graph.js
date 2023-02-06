@@ -1,0 +1,178 @@
+class Node {
+  constructor(idx, price, cost, weight, next) {
+    this.idx = idx;
+    this.price = price;
+    this.cost = cost;
+    this.weight = weight;
+    this.next = next;
+  }
+}
+
+class Graph {
+  constructor(N) {
+    this.N = N;
+    this.i = 0;
+    this.e = 0;
+    this.adj = [];
+
+    for (let i = 0; i < N; i++) {
+      this.adj.push(null);
+    }
+  }
+
+  insertEdge(n1, n2, cost) {
+    if (!this.adj[n1] || !this.adj[n2]) {
+      console.error("n1 ou n2 inexistentes");
+      return;
+    }
+
+    this.e++;
+
+    const nodeToLink = this.adj[n2];
+
+    this.adj[n1].next = new Node(
+      nodeToLink.idx,
+      nodeToLink.price,
+      cost,
+      nodeToLink.weight,
+      this.adj[n1].next
+    );
+
+    this.adj[n2].next = new Node(
+      this.adj[n1].idx,
+      this.adj[n1].price,
+      cost,
+      this.adj[n1].weight,
+      this.adj[n2].next
+    );
+  }
+
+  insertNode(price, cost, weight, next) {
+    this.adj[this.i] = new Node(this.i, price, cost, weight, next);
+    this.i++;
+
+    return this.i;
+  }
+}
+
+class Dijkstra {
+  constructor(graph) {
+    this.graph = graph;
+    this.pa = {};
+    this.dist = {};
+  }
+
+  createCPT(s) {
+    const max = 2147483647;
+    const mature = {};
+
+    this.graph.adj.forEach((v) => {
+      this.pa[v.idx] = -1;
+      this.dist[v.idx] = max;
+      mature[v.idx] = false;
+    });
+
+    this.pa[s.idx] = s.idx;
+    this.dist[s.idx] = 0;
+
+    while (1) {
+      let min = max;
+      let y;
+
+      this.graph.adj.forEach((n) => {
+        if (!mature[n.idx] && this.dist[n.idx] < min) {
+          min = this.dist[n.idx];
+          y = n.idx;
+        }
+      });
+
+      if (min === max) break;
+
+      let node = this.graph.adj[y].next;
+
+      while (node) {
+        if (
+          !mature[node.idx] &&
+          node.idx != s.idx &&
+          this.dist[y] + node.cost < this.dist[node.idx]
+        ) {
+          this.dist[node.idx] = this.dist[y] + node.cost;
+          this.pa[node.idx] = y;
+        }
+        node = node.next;
+      }
+
+      mature[y] = 1;
+    }
+  }
+
+  findMinPath(start, end) {
+    const max = 2147483647;
+    const mature = {};
+    const pa = {};
+    const dist = {};
+
+    this.graph.adj.forEach((v) => {
+      pa[v.idx] = -1;
+      dist[v.idx] = max;
+      mature[v.idx] = false;
+    });
+
+    pa[start.idx] = start.idx;
+
+    dist[start.idx] = 0;
+
+    while (1) {
+      let min = max;
+      let y;
+
+      this.graph.adj.forEach((n) => {
+        if (!mature[n.idx] && dist[n.idx] < min) {
+          min = dist[n.idx];
+          y = n.idx;
+        }
+      });
+
+      if (min === max) break;
+
+      let node = this.graph.adj[y].next;
+
+      while (node) {
+        if (
+          !mature[node.idx] &&
+          node.idx != start.idx &&
+          dist[y] + node.cost < dist[node.idx]
+        ) {
+          dist[node.idx] = dist[y] + node.cost;
+          pa[node.idx] = y;
+        }
+        node = node.next;
+      }
+
+      if (y === end.idx) {
+        break;
+      }
+
+      mature[y] = 1;
+    }
+
+    const path = [end.idx];
+    let parent = pa[end.idx];
+    while (parent != start.idx) {
+      path.unshift(parent);
+      parent = pa[parent];
+    }
+    path.unshift(start.idx);
+
+    return {
+      cost: dist[end.idx],
+      path
+    }
+  }
+}
+
+module.exports = {
+  Graph,
+  Node,
+  Dijkstra,
+};
