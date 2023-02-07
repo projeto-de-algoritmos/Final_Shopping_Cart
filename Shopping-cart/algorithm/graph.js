@@ -1,14 +1,16 @@
 class Node {
-  constructor(idx, price, cost, weight, next) {
+  constructor(idx, price, cost, weight, next, name) {
     this.idx = idx;
     this.price = price;
     this.cost = cost;
     this.weight = weight;
     this.next = next;
+    this.choiced = false;
+    this.name = name;
   }
 }
 
-class Graph {
+export class Graph {
   constructor(N) {
     this.N = N;
     this.i = 0;
@@ -35,7 +37,8 @@ class Graph {
       nodeToLink.price,
       cost,
       nodeToLink.weight,
-      this.adj[n1].next
+      this.adj[n1].next,
+      nodeToLink.name
     );
 
     this.adj[n2].next = new Node(
@@ -43,19 +46,28 @@ class Graph {
       this.adj[n1].price,
       cost,
       this.adj[n1].weight,
-      this.adj[n2].next
+      this.adj[n2].next,
+      this.adj[n1].name
     );
   }
 
-  insertNode(price, cost, weight, next) {
-    this.adj[this.i] = new Node(this.i, price, cost, weight, next);
+  insertNode(price, cost, weight, next, name) {
+    this.adj[this.i] = new Node(this.i, price, cost, weight, next, name);
     this.i++;
 
     return this.i;
   }
+
+  searchNodes(path) {
+    for (let i = 0; i < path.length - 1; i++) {
+      this.adj[path[i]].choiced = true;
+      
+
+    }
+  }
 }
 
-class Dijkstra {
+export class Dijkstra {
   constructor(graph) {
     this.graph = graph;
     this.pa = {};
@@ -171,8 +183,8 @@ class Dijkstra {
   }
 }
 
-module.exports = {
-  Graph,
-  Node,
-  Dijkstra,
-};
+// module.exports = {
+//   Graph,
+//   Node,
+//   Dijkstra,
+// };

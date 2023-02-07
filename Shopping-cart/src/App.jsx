@@ -1,13 +1,18 @@
-import { useState } from 'react'
+import React from 'react'
 import Router from './routes/router'
 import './App.css'
+import generateGraph from '../algorithm/generateGraph';
+
+const Graph = generateGraph();
+
+export const GraphContext = React.createContext();
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <div className="App">
-      <Router/>
+      <GraphContext.Provider value={Graph}>
+        <Router />
+      </GraphContext.Provider>
     </div>
   )
 }

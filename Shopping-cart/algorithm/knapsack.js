@@ -1,4 +1,4 @@
-class Knapsack {
+export class Knapsack {
   constructor(cartWeight, nodes) {
     this.cartWeight = cartWeight;
     this.nodes = nodes;
@@ -46,8 +46,4 @@ class Knapsack {
 
     return items;
   }
-}
-
-module.exports = {
-  Knapsack
 }
