@@ -10,7 +10,7 @@
 | 19/0055201  |  Matheus Calixto Vaz Pinheiro |
 
 ## Sobre 
-O projeto se baseou no programa "Comprar é bom, levar é melhor" da Record TV, em que uma família possui um tempo determinado para pegar todos os itens desejados e disponíveis no hipermercado, considerando que não podem extrapolar o valor máximo estabelecido.
+O projeto se baseou no programa "Comprar é bom, levar é melhor" da emissora Sbt, em que uma família possui um tempo determinado para pegar todos os itens desejados e disponíveis no hipermercado, considerando que não podem extrapolar o valor máximo estabelecido.
 
 ### Estrutura
 Com isso, criamos um grafo não dirigido e conectado, em que os nós representam os produtos do mercado, com as características:
@@ -63,3 +63,4 @@ Ou execute em ambiente local:
 npm install && npm run dev
 ```
 ## Apresentação
+[O vídeo pode ser encontrado aqui.](/assets/presentation.mp4)(/assets/presentation.mp4)
