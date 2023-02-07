@@ -5,13 +5,24 @@
   display: flex;
   justify-content: space-around;
   max-height: 500px;
-  overflow-y: scroll;
   margin-bottom: 2rem;
 }
 
 .produtos {
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0 20px;
+}
+.listaMelhorCarrinho {
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scrollbar-width: none;
   align-items: center;
   justify-content: space-between;
   margin: 0;
@@ -41,4 +52,24 @@
   margin-bottom: 2rem;
   display: flex;
   justify-content: space-around;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ccc; 
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #ccd; 
 }

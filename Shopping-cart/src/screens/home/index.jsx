@@ -4,7 +4,7 @@ import ForceGraph3D from 'react-force-graph-3d';
 import { GraphContext } from '../../App';
 import { products } from '../../../algorithm/data/products';
 import { Knapsack } from '../../../algorithm/knapsack';
-import { Djikstra } from '../../../algorithm/graph';
+import { Dijkstra } from '../../../algorithm/graph';
 
 function convertGraph(g) {
     let nodes = g.adj.filter(node => node)
@@ -15,6 +15,7 @@ function convertGraph(g) {
             links.push({
                 source: node.name,
                 target: g.adj[nextNode.idx].name,
+                color: g.adj[nextNode.idx].isPath ? 'red' : '#fff',
                 cost: nextNode.cost
             })
 
@@ -23,7 +24,7 @@ function convertGraph(g) {
     })
 
     nodes = nodes.map(node => {
-        return { id: node.name, name: node.name, price: node.price, weight: node.weight }
+        return { id: node.name, name: node.name, price: node.price, weight: node.weight, color: node.choiced ? 'cyan' : '#fff' }
     })
 
     return { nodes, links }
@@ -33,26 +34,42 @@ export default function Home(props) {
     const graph = useContext(GraphContext);
     const [melhorCarrinho, setMelhorCarrinho] = React.useState([]);
     const [melhorCarrinhoPrice, setMelhorCarrinhoPrice] = React.useState(0);
+    const [tempoTotal, setTempoTotal] = React.useState(0);
 
     const geraMelhorCarrinho = () => {
         const knapsack = new Knapsack(10, graph.adj);
         setMelhorCarrinhoPrice(knapsack.findMaxPrice());
         const result = knapsack.getItems();
+
+        result.forEach(item => {
+            graph.adj[item.idx].choiced = true;
+        })
         setMelhorCarrinho(result);
     }
 
     const geraMelhorCaminho = () => {
-        const djikstra = new Djikstra(graph);
-        djikstra.createCPT(djikstra.graph.adj[0]);
-        let minDist = Infinity;
-        let minDistIdx = 0;
-        Object.entries(djikstra.dist).forEach(([key, value]) => {
-            if (melhorCarrinho.find(product => product.idx === key)) {
-                minDist = value < minDist ? value : minDist
-                minDistIdx = value < minDist ? key : minDistIdx
-            }
+        const djikstra = new Dijkstra(graph);
+        
+        let results = [];
+        for (let i = 1; i < melhorCarrinho.length; i++) {
+            const result = djikstra.findMinPath(melhorCarrinho[i - 1], melhorCarrinho[i]);
+            
+            results = results.concat(result);
+        }
+        console.log(results)
+        results.forEach(result => {
+            result.path.forEach(idx => {
+                graph.adj[idx].isPath = true;
+            })
+            setTempoTotal((state) => state + result.cost);
         })
-        const result = djikstra.findPath(melhorCarrinho[0], melhorCarrinho[melhorCarrinho.length - 1]);
+    }
+
+    const timeCost = (tempoTotal) => {
+        const minutos = Math.floor(tempoTotal / 60);
+        const segundos = tempoTotal % 60;
+
+        return `${minutos} minuto(s) e ${segundos} segundo(s)`
     }
 
     return (
@@ -97,17 +114,26 @@ export default function Home(props) {
                     Gerar melhor carrinho
                 </button>
                 {melhorCarrinho.length > 0 &&
-                    <button className='botaoGerarCarrinho' onClick={geraMelhorCarrinho}>
+                    <button className='botaoGerarCarrinho' onClick={geraMelhorCaminho}>
                         Marcar melhor caminho para pegar os produtos
                     </button>
                 }
             </div>
+            {
+                tempoTotal > 0 &&
+                <div className="tempoTotal">
+                    <h2>
+                        Tempo total para pegar os produtos: {timeCost(tempoTotal)}
+                    </h2>
+                </div>
+            }
             <div className='graphView'>
                 <ForceGraph3D
                     graphData={convertGraph(graph)}
+                    width="90vw"
                     nodeLabel="name"
                     linkLabel="cost"
-                    nodeAutoColorBy="weight"
+                    nodeColor="color"
                     linkColor="color"
                 />
             </div>
