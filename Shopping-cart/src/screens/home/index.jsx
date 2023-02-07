@@ -35,9 +35,10 @@ export default function Home(props) {
     const [melhorCarrinho, setMelhorCarrinho] = React.useState([]);
     const [melhorCarrinhoPrice, setMelhorCarrinhoPrice] = React.useState(0);
     const [tempoTotal, setTempoTotal] = React.useState(0);
+    const [numeroCarrinho, setNumeroCarrinho] = React.useState(10);
 
     const geraMelhorCarrinho = () => {
-        const knapsack = new Knapsack(10, graph.adj);
+        const knapsack = new Knapsack(numeroCarrinho, graph.adj);
         setMelhorCarrinhoPrice(knapsack.findMaxPrice());
         const result = knapsack.getItems();
 
@@ -49,11 +50,11 @@ export default function Home(props) {
 
     const geraMelhorCaminho = () => {
         const djikstra = new Dijkstra(graph);
-        
+
         let results = [];
         for (let i = 1; i < melhorCarrinho.length; i++) {
             const result = djikstra.findMinPath(melhorCarrinho[i - 1], melhorCarrinho[i]);
-            
+
             results = results.concat(result);
         }
         console.log(results)
@@ -74,16 +75,23 @@ export default function Home(props) {
 
     return (
         <div className='container'>
-            <div className="cima">
-                <div className='produtos'>
+            <div className="titulos">
                     <h2>
                         Lista de produtos
                     </h2>
+                    <h2>
+                        Melhor carrinho
+                    </h2>
+                </div>
+            <div className="cima">
+                
+                <div className='produtos'>
+
                     <ul className='listaProdutos'>
                         {products.sort((a, b) => a.name.localeCompare(b.name)).map(product => (
                             <div>
                                 <li key={product.id}>
-                                    <strong>{product.name}</strong> - R${product.price},00 - espaço necessário: {product.weight}
+                                    <strong>{product.name}</strong> - R${product.price},00 - espaço utilizado: {product.weight}
                                 </li>
                                 <div className="divider"></div>
                             </div>
@@ -91,9 +99,7 @@ export default function Home(props) {
                     </ul>
                 </div>
                 <div className="listaMelhorCarrinho">
-                    <h2>
-                        Melhor carrinho
-                    </h2>
+
                     <h3>
                         Preço Total do Carrinho: R${melhorCarrinhoPrice},00
                     </h3>
@@ -101,7 +107,7 @@ export default function Home(props) {
                         {melhorCarrinho.sort((a, b) => a.name.localeCompare(b.name)).map(product => (
                             <div>
                                 <li key={product.id}>
-                                    <strong>{product.name}</strong> - R${product.price},00 - espaço necessário: {product.weight}
+                                    <strong>{product.name}</strong> - R${product.price},00 - espaço utilizado: {product.weight}
                                 </li>
                                 <div className="divider"></div>
                             </div>
@@ -110,9 +116,22 @@ export default function Home(props) {
                 </div>
             </div>
             <div className="botoes">
-                <button className='botaoGerarCarrinho' onClick={geraMelhorCarrinho}>
-                    Gerar melhor carrinho
-                </button>
+                <div className='geraCarrinho'>
+                    <button className='botaoGerarCarrinho' onClick={geraMelhorCarrinho}>
+                        Gerar melhor carrinho
+                    </button>
+                    <div className='escolheTamanhoCarrinho'>
+                        <label htmlFor="numeroCarrinho">Espaço do Carrinho</label>
+                        <input
+                            className="numeroCarrinho"
+                            type="number"
+                            value={numeroCarrinho}
+                            onChange={(e) => setNumeroCarrinho(e.target.value)}
+                            min={1}
+                            max={30}
+                        />
+                    </div>
+                </div>
                 {melhorCarrinho.length > 0 &&
                     <button className='botaoGerarCarrinho' onClick={geraMelhorCaminho}>
                         Marcar melhor caminho para pegar os produtos

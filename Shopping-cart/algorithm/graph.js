@@ -7,6 +7,7 @@ class Node {
     this.next = next;
     this.choiced = false;
     this.name = name;
+    this.isPath = false;
   }
 }
 

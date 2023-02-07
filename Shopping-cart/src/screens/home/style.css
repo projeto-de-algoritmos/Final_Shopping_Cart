@@ -53,6 +53,30 @@
   display: flex;
   justify-content: space-around;
 }
+
+.escolheTamanhoCarrinho {
+  display: flex;
+  flex-direction: column;
+}
+
+.numeroCarrinho {
+  background-color: #3b3b3b;
+  border-radius: 5%;
+  border: 1px solid #363636;
+  height: 25px;
+}
+
+.geraCarrinho {
+  width: 20%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.titulos {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+}
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
