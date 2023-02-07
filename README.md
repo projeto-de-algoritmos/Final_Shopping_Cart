@@ -63,4 +63,4 @@ Ou execute em ambiente local:
 npm install && npm run dev
 ```
 ## Apresentação
-[O vídeo pode ser encontrado aqui.](/assets/presentation.mp4)(/assets/presentation.mp4)
+[O vídeo pode ser encontrado aqui.](/assets/presentation.mp4)
